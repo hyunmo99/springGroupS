@@ -23,7 +23,6 @@
 	  }
   }
 </script>
-
 <!-- Navbar -->
 <div class="w3-top">
   <div class="w3-bar w3-black w3-card">
@@ -31,7 +30,7 @@
     <a href="http://192.168.50.58:9090/springGroupS/" class="w3-bar-item w3-button w3-padding-large">HOME</a>
     <a href="${ctp}/guest/guestList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Guest</a>
     <c:if test="${sLevel <= 3}">
-	    <a href="#tour" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Board</a>
+	    <a href="${ctp}/board/boardList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Board</a>
 	    <c:if test="${sLevel < 3}">
 		    <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hide-small">PDS</a>
 		    <div class="w3-dropdown-hover w3-hide-small">
