@@ -31,11 +31,11 @@
       <td><a href="boardInput" class="btn btn-success btn-sm">글쓰기</a></td>
       <td class="text-end">
         <select name="pageSize" id="pageSize" onchange="pageSizeCheck()">
-          <option ${pageSize==5  ? 'selected' : ''}>5</option>
-          <option ${pageSize==10 ? 'selected' : ''}>10</option>
-          <option ${pageSize==15 ? 'selected' : ''}>15</option>
-          <option ${pageSize==20 ? 'selected' : ''}>20</option>
-          <option ${pageSize==30 ? 'selected' : ''}>30</option>
+          <option ${pageVO.pageSize==5  ? 'selected' : ''}>5</option>
+          <option ${pageVO.pageSize==10 ? 'selected' : ''}>10</option>
+          <option ${pageVO.pageSize==15 ? 'selected' : ''}>15</option>
+          <option ${pageVO.pageSize==20 ? 'selected' : ''}>20</option>
+          <option ${pageVO.pageSize==30 ? 'selected' : ''}>30</option>
         </select>
       </td>
     </tr>
@@ -48,6 +48,7 @@
     	<th>올린날짜</th>
     	<th>조회수(♥)</th>
     </tr>
+    <c:set var="curScrStartNo" value="${pageVO.curScrStartNo}" />
     <c:forEach var="vo" items="${vos}" varStatus="st">
       <tr>
         <td>${curScrStartNo}</td>
@@ -55,14 +56,14 @@
           <c:if test="${vo.openSw == 'NO'}">
             <c:if test="${sMid != vo.mid && sAdmin != 'adminOK'}">(비밀글)</c:if>
             <c:if test="${sMid == vo.mid || sAdmin == 'adminOK'}">
-		          <a href="boardContent?idx=${vo.idx}&pag=${pag}&pageSize=${pageSize}" class="text-decoration-none text-dark link-primary">
+		          <a href="boardContent?idx=${vo.idx}&pag=${pageVO.pag}&pageSize=${pageVO.pageSize}" class="text-decoration-none text-dark link-primary">
 		            <c:if test="${sAdmin == 'adminOK'}"><font color="red">(비밀글)</font></c:if>${vo.title}
 		          </a><c:if test="${vo.replyCnt != 0}">(${vo.replyCnt})</c:if>
 		          <c:if test="${vo.hour_diff <= 24}"><img src="${ctp}/images/new.gif" /></c:if>
             </c:if>
           </c:if>
           <c:if test="${vo.openSw != 'NO'}">
-	          <a href="boardContent?idx=${vo.idx}&pag=${pag}&pageSize=${pageSize}" class="text-decoration-none text-dark link-primary">${vo.title}</a><c:if test="${vo.replyCnt != 0}">(${vo.replyCnt})</c:if>
+	          <a href="boardContent?idx=${vo.idx}&pag=${pageVO.pag}&pageSize=${pageVO.pageSize}" class="text-decoration-none text-dark link-primary">${vo.title}</a><c:if test="${vo.replyCnt != 0}">(${vo.replyCnt})</c:if>
 	          <c:if test="${vo.hour_diff <= 24}"><img src="${ctp}/images/new.gif" /></c:if>
           </c:if>
         </td>
@@ -80,14 +81,14 @@
 <!-- 블록페이지 시작 -->
 
 	<div class="pagination justify-content-center">
-	  <c:if test="${pag > 1}"><a href="boardList?pag=1&pageSize=${pageSize}" class="page-item page-link text-decoration-none text-dark link-primary">첫페이지</a></c:if>
-	  <c:if test="${curBlock > 0}"><a href="boardList?pag=${(curBlock-1)*blockSize + 1}&pageSize=${pageSize}" class="page-item page-link text-decoration-none text-dark link-primary">이전블록</a></c:if>
-	  <c:forEach var="i" begin="${(curBlock*blockSize)+1}" end="${(curBlock*blockSize)+blockSize}" varStatus="st">
-	  	<c:if test="${i <= totPage && i == pag}"><a href="boardList?pag=${i}&pageSize=${pageSize}" class="page-item page-link active text-decoration-none bg-secondary border-secondary">${i}</a></c:if>
-	  	<c:if test="${i <= totPage && i != pag}"><a href="boardList?pag=${i}&pageSize=${pageSize}" class="page-item page-link text-decoration-none text-dark link-primary">${i}</a></c:if>
+	  <c:if test="${pageVO.pag > 1}"><a href="boardList?pag=1&pageSize=${pageVO.pageSize}" class="page-item page-link text-decoration-none text-dark link-primary">첫페이지</a></c:if>
+	  <c:if test="${pageVO.curBlock > 0}"><a href="boardList?pag=${(pageVO.curBlock-1)*pageVO.blockSize + 1}&pageSize=${pageVO.pageSize}" class="page-item page-link text-decoration-none text-dark link-primary">이전블록</a></c:if>
+	  <c:forEach var="i" begin="${(pageVO.curBlock*pageVO.blockSize)+1}" end="${(pageVO.curBlock*pageVO.blockSize)+pageVO.blockSize}" varStatus="st">
+	  	<c:if test="${i <= pageVO.totPage && i == pageVO.pag}"><a href="boardList?pag=${i}&pageSize=${pageVO.pageSize}" class="page-item page-link active text-decoration-none bg-secondary border-secondary">${i}</a></c:if>
+	  	<c:if test="${i <= pageVO.totPage && i != pageVO.pag}"><a href="boardList?pag=${i}&pageSize=${pageVO.pageSize}" class="page-item page-link text-decoration-none text-dark link-primary">${i}</a></c:if>
 	  </c:forEach>
-	  <c:if test="${curBlock < lastBlock}"><a href="boardList?pag=${(curBlock+1)*blockSize + 1}&pageSize=${pageSize}" class="page-item page-link text-decoration-none text-dark link-primary">다음블록</a></c:if>
-	  <c:if test="${pag < totPage}"><a href="boardList?pag=${totPage}&pageSize=${pageSize}" class="page-item page-link text-decoration-none text-dark link-primary">마지막페이지</a></c:if>
+	  <c:if test="${pageVO.curBlock < pageVO.lastBlock}"><a href="boardList?pag=${(pageVO.curBlock+1)*pageVO.blockSize + 1}&pageSize=${pageVO.pageSize}" class="page-item page-link text-decoration-none text-dark link-primary">다음블록</a></c:if>
+	  <c:if test="${pageVO.pag < pageVO.totPage}"><a href="boardList?pag=${pageVO.totPage}&pageSize=${pageVO.pageSize}" class="page-item page-link text-decoration-none text-dark link-primary">마지막페이지</a></c:if>
 	</div>
 <!-- 블록페이지 끝 -->
 <br/>

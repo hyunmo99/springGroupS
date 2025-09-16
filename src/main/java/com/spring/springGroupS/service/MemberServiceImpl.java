@@ -41,6 +41,7 @@ public class MemberServiceImpl implements MemberService {
 	public int setMemberPwdChange(String mid, String pwd) {
 		return memberDAO.setMemberPwdChange(mid, pwd);
 	}
+	
 
 	@Override
 	public void setMemberTodayCntClear(String mid) {
@@ -80,6 +81,11 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public List<MemberVO> getMemberList(int startIndexNo, int pageSize, int level) {
 		return memberDAO.getMemberList(startIndexNo, pageSize, level);
+	}
+
+	@Override
+	public int getTotRecCnt() {
+		return memberDAO.getTotRecCnt();
 	}
 	
 }

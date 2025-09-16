@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<% pageContext.setAttribute("newLine", "\n"); %>
+<% pageContext.setAttribute("LF", "\n"); %>
+<% pageContext.setAttribute("CRLF", "\r\n"); %>
 <c:set var="ctp" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html>
@@ -84,10 +87,12 @@
     	for(let i=0; i<myform.idxFlag.length; i++) {
     		if(myform.idxFlag[i].checked) idxSelectArray += myform.idxFlag[i].value + "/";
     	}
+    	
     	if(idxSelectArray == '') {
     		alert("등급을 변경할 항목을 1개 이상 선택하세요");
     		return false;
     	}
+    	
     	idxSelectArray = idxSelectArray.substring(0, idxSelectArray.lastIndexOf("/"));
     	let query = {
     			idxSelectArray : idxSelectArray,
@@ -108,7 +113,27 @@
    			error : () => alert("전송오류")
    		});
     }
+    
+    // 아이디 클릭시 모달창으로 상세정보 표시하기
+    function modalCheck(mid,nickName,name,level,birthday,gender,userDel,visitCnt,photo,content) {
+  		$("#myModal #modalMid").text(mid);
+  		$("#myModal #modalNickName").text(nickName);
+  		$("#myModal #modalName").text(name);
+  		$("#myModal #modalLevel").text(level);
+  		$("#myModal #modalBirthday").text(birthday);
+  		$("#myModal #modalGender").text(gender);
+  		$("#myModal #modalUserDel").text(userDel);
+  		$("#myModal #modalVisitCnt").text(visitCnt);
+  		photo = '<img src="${ctp}/member/'+photo+'" width="100px"/>';
+  		$("#myModal #modalPhoto").html(photo);
+  		$("#myModal #modalContent").html(content);
+    }
   </script>
+  <style>
+    th {
+      background-color: #ccc !important;
+    }
+  </style>
 </head>
 <body>
 <p><br/></p>
@@ -161,8 +186,14 @@
 	          <c:if test="${vo.level == 0}"><input type="checkbox" name="idxFlag" id="idxFlag${vo.idx}" value="${vo.idx}" disabled /></c:if>
 	          ${vo.idx}
 	        </td>
-	        <td>${vo.mid}</td>
-	        <td>${vo.nickName}</td>
+	        <td>
+	          <c:set var="level" value="${vo.level==0?'관리자':vo.level==1?'우수회원':vo.level==2?'정회원':'준회원'}"/>
+	          <c:set var="content" value="${fn:replace(fn:replace(vo.content, CRLF, '<br/>'), LF, '<br/>')}" />
+	          <a href="#" onclick="modalCheck('${vo.mid}','${vo.nickName}','${vo.name}','${level}','${fn:substring(vo.birthday,0,10)}','${vo.gender}','${vo.userDel=='NO'?'활동중':'탈퇴신청중'}','${vo.visitCnt}','${vo.photo}','${content}')" data-bs-toggle="modal" data-bs-target="#myModal">${vo.mid}</a>
+	        </td>
+	        <td>
+	          <a href="#" data-bs-toggle="modal" data-bs-target="#memberModal${vo.idx}">${vo.nickName}</a>
+	        </td>
 	        <td>${vo.name}</td>
 	        <td>${fn:substring(vo.birthday,0,10)}</td>
 	        <td>${vo.gender}</td>
@@ -171,6 +202,10 @@
 	        <td>
 	          <c:if test="${vo.userDel == 'NO'}">활동중</c:if>
 	          <c:if test="${vo.userDel == 'OK'}">탈퇴신청중</c:if>
+	          <c:if test="${vo.userDel == 'OK' && vo.deleteDiff < 30}">(<font color='red'>${vo.deleteDiff}</font>)</c:if>
+	          <c:if test="${vo.userDel == 'OK' && vo.deleteDiff >= 30}"><br/>
+	            (<a href="javascript:memberDeleteOk('${vo.idx}','${vo.photo}')"><font color='red'>30일경과</font></a>)
+	          </c:if>
 	        </td>
 	        <td>
 	          <select name="level" id="level" onchange="levelChange(this)">
@@ -182,10 +217,79 @@
 	          </select>
 	        </td>
 	      </tr>
+	      
+				<!-- memberModal 시작(회원 개수만큼 생성) -->
+			  <div class="modal fade" id="memberModal${vo.idx}">
+			    <div class="modal-dialog modal-content">
+		        <div class="modal-header">
+		          <h5 class="modal-title">회원정보: ${vo.mid}</h5>
+		          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		        </div>
+		        <div class="modal-body">
+		          <p>닉네임: ${vo.nickName}</p>
+		          <p>이름: ${vo.name}</p>
+		          <p>생일: ${fn:substring(vo.birthday,0,10)}</p>
+		          <p>성별: ${vo.gender}</p>
+		          <p>전화번호: ${vo.tel}</p>
+		          <p>이메일: ${vo.email}</p>
+		          <p>주소: ${vo.address}</p>
+		          <p>회원등급: 
+		            <c:choose>
+		              <c:when test="${vo.level == 0}">관리자</c:when>
+		              <c:when test="${vo.level == 1}">우수회원</c:when>
+		              <c:when test="${vo.level == 2}">정회원</c:when>
+		              <c:when test="${vo.level == 3}">준회원</c:when>
+		              <c:otherwise>탈퇴신청회원</c:otherwise>
+		            </c:choose>
+		          </p>
+		          <p>사진 : <img src="${ctp}/member/${vo.photo}" width="200px"/></p>
+		          <div>자기소개: <div class="ms-3">${fn:replace(vo.content, newLine, "<br/>")}</div></div>
+		        </div>
+		        <div class="modal-footer">
+		          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+		        </div>
+			    </div>
+			  </div>
+			  <!-- modal 끝 -->
+	      
 	    </c:forEach>
 	  </table>
   </form>
 </div>
+
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 id="modal-title" class="modal-title">회원 상세정보</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+        <table class="table table-bordered text-center">
+          <tr><th>아이디</th><td id="modalMid"></td></tr>
+          <tr><th>닉네임</th><td><span id="modalNickName"></span></td></tr>
+          <tr><th>성명</th><td><span id="modalName"></span></td></tr>
+          <tr><th>등급</th><td><span id="modalLevel"></span></td></tr>
+          <tr><th>생일</th><td><span id="modalBirthday"></span></td></tr>
+          <tr><th>성별</th><td><span id="modalGender"></span></td></tr>
+          <tr><th>활동여부</th><td><span id="modalUserDel"></span></td></tr>
+          <tr><th>총 방문수</th><td><span id="modalVisitCnt"></span></td></tr>
+          <tr><th>회원사진</th><td><span id="modalPhoto"></span></td></tr>
+          <tr><th>콘텐트</th><td><span id="modalContent"></span></td></tr>
+          <!-- <tr><th>회원소개</th><td><span id="modalContent"></span></td></tr> -->
+        </table>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <p><br/></p>
 </body>
 </html>
