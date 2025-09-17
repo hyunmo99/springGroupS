@@ -94,7 +94,7 @@
 <br/>
 <!--검색기 시작 -->
 	<div class="text-center">
-		<form action="boardSearchList" name="seachFrom" method="post">
+		<form action="boardSearchList" name="seachFrom" method="get">
 			<b>검색 : </b>
 			<select name="search" id="search">
 				<option value="title" selected>글제목</option>
