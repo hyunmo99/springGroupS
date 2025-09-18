@@ -28,7 +28,7 @@
     <div><b>회원관리</b></div>
     <div>
       <p><a href="${ctp}/admin/member/adMemberList" target="adminContent">회원리스트</a></p>
-      <p><a href="">신고리스트</a></p>
+      <p><a href="${ctp}/admin/complaint/complaintList" target="adminContent" >신고리스트</a></p>
     </div>
   </div>
   <div>

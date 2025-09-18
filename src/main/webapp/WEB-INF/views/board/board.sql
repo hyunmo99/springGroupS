@@ -11,7 +11,7 @@ create table board2 (
   readNum int default 0,						/* 글 조회수 */
   wDate datetime default now(),			/* 글 올린 날짜 */
   good  int default 0,							/* 좋아요 클릭수 */
-  complaint char(2) default 'NO',	/* 신고글(정상글:NO, 신고당한글:OK) */
+  complaint char(2) default 'NO',	/* 신고글(정상글:NO, 신고당한글:OK, 신고처리중) */
   primary key(idx),
   foreign key(mid) references member(mid)
 );

@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.spring.springGroupS.common.Pagenation;
 import com.spring.springGroupS.service.AdminService;
 import com.spring.springGroupS.service.MemberService;
+import com.spring.springGroupS.vo.ComplaintVO;
 import com.spring.springGroupS.vo.MemberVO;
+import com.spring.springGroupS.vo.PageVO;
 
 @Controller
 @RequestMapping("/admin")
@@ -24,6 +27,9 @@ public class AdminController {
 	
 	@Autowired
 	MemberService memberService;
+	
+	@Autowired
+	Pagenation pagenation;
 	
 		
 	@GetMapping("/adminMain")
@@ -64,10 +70,57 @@ public class AdminController {
 	public int memberLevelChangePost(int level, int idx) {
 		return adminService.setMemberLevelChange(level, idx);
 	}
-	// 선택한 회원들 등급 변ㅂ경 처리
+	// 선택한 회원들 등급 변경 처리
 	@ResponseBody
 	@PostMapping("/member/memberLevelSelectChange")
 	public int memberLevelSelectChangePost(String idxSelectArray, int levelSelect) {
 		return adminService.setMemberLevelSelectChange(idxSelectArray, levelSelect);
+	}
+	
+	// 신고리스트 폼보기
+	@GetMapping("/complaint/complaintList")
+	public String complaintListGet(Model model, PageVO pageVO) {
+		pageVO.setSection("complaint");
+		pageVO = pagenation.pagenation(pageVO);
+		List<ComplaintVO> vos = adminService.getComplaintList(pageVO.getStartIndexNo(), pageVO.getPageSize());
+		System.out.println("vos1 : " + vos);
+		model.addAttribute("vos", vos);
+		return "admin/complaint/complaintList";
+	}
+	
+	// 신고리스트 상세보기
+	@GetMapping("/complaint/complaintContent")
+	public String complaintContentGet(Model model, int partIdx) {
+		System.out.println(partIdx);
+		ComplaintVO vo = adminService.getComplaintSearch(partIdx);
+		System.out.println("vo : " + vo);
+		model.addAttribute("vo", vo);
+		return "admin/complaint/complaintContent";
+	}
+	
+	// 신고내역자료 '취소/감추기/삭제'
+	@ResponseBody
+	@PostMapping("/complaint/complaintProcess")
+	public int complaintProcessPost(ComplaintVO vo) {
+		int res = 0;
+		
+		if(vo.getComplaintSw().equals("D")) {
+			res = adminService.setComplaintDelete(vo.getPartIdx(), vo.getPart());
+			vo.setComplaintSw("처리완료(D)");
+			
+		}
+		else {
+			if(vo.getComplaintSw().equals("H")) {
+				res = adminService.setComplaintProcess(vo.getPartIdx(), "HI");
+				vo.setComplaintSw("처리중(H)");
+			}
+			else {
+				res =adminService.setComplaintProcess(vo.getPartIdx(), "NO");
+				 vo.setComplaintSw("처리중(S)");
+			}
+		}
+		if(res != 0) adminService.setComplaintProcessOk(vo.getIdx(), vo.getComplaintSw());
+		
+		return res;
 	}
 }
