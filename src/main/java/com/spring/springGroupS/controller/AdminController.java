@@ -1,6 +1,9 @@
 package com.spring.springGroupS.controller;
 
+import java.io.File;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -83,7 +86,6 @@ public class AdminController {
 		pageVO.setSection("complaint");
 		pageVO = pagenation.pagenation(pageVO);
 		List<ComplaintVO> vos = adminService.getComplaintList(pageVO.getStartIndexNo(), pageVO.getPageSize());
-		System.out.println("vos1 : " + vos);
 		model.addAttribute("vos", vos);
 		return "admin/complaint/complaintList";
 	}
@@ -93,7 +95,6 @@ public class AdminController {
 	public String complaintContentGet(Model model, int partIdx) {
 		System.out.println(partIdx);
 		ComplaintVO vo = adminService.getComplaintSearch(partIdx);
-		System.out.println("vo : " + vo);
 		model.addAttribute("vo", vo);
 		return "admin/complaint/complaintContent";
 	}
@@ -122,5 +123,17 @@ public class AdminController {
 		if(res != 0) adminService.setComplaintProcessOk(vo.getIdx(), vo.getComplaintSw());
 		
 		return res;
+	}
+	
+	@GetMapping("/etc/fileManagement")
+	public String fileManagementGet(Model model, String part, HttpServletRequest request) {
+		part = part == "" ? "fileUpload" : "fileUpload";
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/"+part+"/");
+		System.out.println("realPath : " + realPath);
+		String[] files = new File(realPath).list();
+		model.addAttribute("part", part);
+		model.addAttribute("files", files);
+		model.addAttribute("fileCount", files.length);
+		return "admin/etc/fileManagement";
 	}
 }

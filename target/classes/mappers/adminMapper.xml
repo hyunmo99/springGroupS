@@ -7,7 +7,7 @@
 	</select>
 	
 	<select id="getComplaintSearch" resultType="com.spring.springGroupS.vo.ComplaintVO">
-	  select c.part as part, c.partIdx, b.title as title, b.nickName as nickName, c.cpMid as cpMid, c.cpContent as cpContent, date_format(c.cpDate, '%Y-%m-%d %H:%i') as cpDate, c.progress, b.mid as mid, b.content as content from complaint c left join board2 b on c.partIdx=b.idx where c.partIdx=#{partIdx};
+	  select c.part as part, c.partIdx, b.title as title, b.nickName as nickName, c.cpMid as cpMid, c.cpContent as cpContent, date_format(c.cpDate, '%Y-%m-%d %H:%i') as cpDate, c.progress, b.mid as mid, b.content as content from complaint c left join board2 b on c.partIdx=b.idx where c.partIdx=#{partIdx} limit 1;
 	</select>
 	
 	

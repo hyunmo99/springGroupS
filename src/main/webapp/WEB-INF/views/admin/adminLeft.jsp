@@ -66,7 +66,7 @@
       <p><a href="">FAQ관리</a></p>
       <p><a href="">QnA관리</a></p>
       <p><a href="">쿠폰관리</a></p>
-      <p><a href="">임시파일관리</a></p>
+      <p><a href="${ctp}/admin/etc/fileManagement" target="adminContent">임시파일관리</a></p>
       <p><a href="">실시간상담</a></p>
       <p><a href="">1:1문의</a></p>
       <p><a href="">상품메인이미지관리</a></p>

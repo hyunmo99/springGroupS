@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.springGroupS.service.BoardService;
 import com.spring.springGroupS.service.MemberService;
+import com.spring.springGroupS.service.PdsService;
 import com.spring.springGroupS.vo.PageVO;
 
 @Service
@@ -14,10 +15,14 @@ public class Pagenation {
 	BoardService boardService;
 	@Autowired
 	MemberService memberService;
+	@Autowired
+	PdsService pdsService;
 	
 	public PageVO pagenation(PageVO pageVO) {
 		int pag = pageVO.getPag() == 0 ? 1 : pageVO.getPag();
 		int pageSize = pageVO.getPageSize() == 0 ? 10 : pageVO.getPageSize();
+		int level = pageVO.getLevel() == 0 ? 99 : pageVO.getLevel();
+		String part = pageVO.getPart() == null ? "" : pageVO.getPart();
 		
 		int totRecCnt = 0;
 		
@@ -26,7 +31,11 @@ public class Pagenation {
 			else totRecCnt = boardService.getTotRecCnt(pageVO.getSearch(), pageVO.getSearchString());
 		}
 		else if(pageVO.getSection().equals("member")) {
-			totRecCnt = memberService.getTotRecCnt();
+			if(level==99) totRecCnt = memberService.getTotRecCnt();
+			else totRecCnt = memberService.getTotRecCnt();
+		}
+		else if(pageVO.getSection().equals("pds")) {
+			totRecCnt = pdsService.getTotRecCnt(pageVO.getPart());
 		}
 		
 		int totPage = (totRecCnt % pageSize) == 0 ? totRecCnt / pageSize : (totRecCnt / pageSize) + 1;
@@ -55,8 +64,11 @@ public class Pagenation {
 		pageVO.setSearch(pageVO.getSearch());
 		pageVO.setSearchString(pageVO.getSearchString());
 		
-		pageVO.setPart(pageVO.getPart());
+		//pageVO.setPart(pageVO.getPart());
+		pageVO.setPart(part);
 		pageVO.setBoardFlag(pageVO.getBoardFlag());
+		pageVO.setLevel(level);
+		
 		return pageVO;
 	}
 }
