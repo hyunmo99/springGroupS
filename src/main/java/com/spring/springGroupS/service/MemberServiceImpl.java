@@ -87,5 +87,8 @@ public class MemberServiceImpl implements MemberService {
 	public int getTotRecCnt() {
 		return memberDAO.getTotRecCnt();
 	}
-	
+	@Override
+	public List<MemberVO> getMemberLevelCount(int level) {
+		return memberDAO.getMemberLevelCount(level);
+	}
 }

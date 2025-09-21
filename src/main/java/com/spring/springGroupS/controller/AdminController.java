@@ -51,19 +51,20 @@ public class AdminController {
 	}
 	
 	@GetMapping("/member/adMemberList")
-	public String adMemberListGet(Model model,
-			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
-			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize,
-			@RequestParam(name="level", defaultValue = "99", required = false) int level
-		) {
+	public String adMemberListGet(Model model, PageVO pageVO) {
 		// 페이징 처리하기
+		pageVO.setSection("member");
 		
-		List<MemberVO> vos = memberService.getMemberList(0, pageSize, level);
+		System.out.println("pageVO.Level" + pageVO.getLevel());
+		System.out.println("pageVO.Level" + pageVO.getPageSize());
+		System.out.println("pageVO.Level" + pageVO.getPag());
+		pageVO = pagenation.pagenation(pageVO);
+		List<MemberVO> vos = memberService.getMemberList(pageVO.getPag(), pageVO.getPageSize(), pageVO.getLevel());
 		
 		// 페이징처리 변수 넘겨주기
-		
+		System.out.println("vos : " + vos);
 		model.addAttribute("vos", vos);
-		model.addAttribute("level", level);
+		model.addAttribute("pageVO", pageVO);
 		return "admin/member/adMemberList";
 	}
 	
@@ -126,8 +127,9 @@ public class AdminController {
 	}
 	
 	@GetMapping("/etc/fileManagement")
-	public String fileManagementGet(Model model, String part, HttpServletRequest request) {
-		part = part == "" ? "fileUpload" : "fileUpload";
+	public String fileManagementGet(Model model, HttpServletRequest request,
+			@RequestParam(name="part", defaultValue = "fileUpload", required = false) String part
+			) {
 		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/"+part+"/");
 		System.out.println("realPath : " + realPath);
 		String[] files = new File(realPath).list();

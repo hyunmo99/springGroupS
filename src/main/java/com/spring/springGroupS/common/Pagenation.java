@@ -25,14 +25,16 @@ public class Pagenation {
 		String part = pageVO.getPart() == null ? "" : pageVO.getPart();
 		
 		int totRecCnt = 0;
-		
+		System.out.println("pageVO : " + pageVO.getLevel());
 		if(pageVO.getSection().equals("board")) {
 			if(pageVO.getSearch()==null) totRecCnt = boardService.getTotRecCnt("","");
 			else totRecCnt = boardService.getTotRecCnt(pageVO.getSearch(), pageVO.getSearchString());
 		}
 		else if(pageVO.getSection().equals("member")) {
 			if(level==99) totRecCnt = memberService.getTotRecCnt();
-			else totRecCnt = memberService.getTotRecCnt();
+			else {
+				totRecCnt = memberService.getMemberLevelCount(level).size();
+			}
 		}
 		else if(pageVO.getSection().equals("pds")) {
 			totRecCnt = pdsService.getTotRecCnt(pageVO.getPart());
