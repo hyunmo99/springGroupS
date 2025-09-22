@@ -25,7 +25,6 @@ public class Pagenation {
 		String part = pageVO.getPart() == null ? "" : pageVO.getPart();
 		
 		int totRecCnt = 0;
-		System.out.println("pageVO : " + pageVO.getLevel());
 		if(pageVO.getSection().equals("board")) {
 			if(pageVO.getSearch()==null) totRecCnt = boardService.getTotRecCnt("","");
 			else totRecCnt = boardService.getTotRecCnt(pageVO.getSearch(), pageVO.getSearchString());

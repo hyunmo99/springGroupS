@@ -192,6 +192,14 @@ public class MessageController {
 			model.addAttribute("message", "게시글을 삭제실패");
 			model.addAttribute("url", "/board/boardContent?idx="+idx+"&pag="+pageVO.getPageSize()+"&pageSize="+pageVO.getPageSize());
 		}
+		else if(msgFlag.equals("pdsInputOk")) {
+			model.addAttribute("message", "자료실에 자료가 등록되었습니다");
+			model.addAttribute("url", "/pds/pdsList");
+		}
+		else if(msgFlag.equals("pdsInputNo")) {
+			model.addAttribute("message", "자료실에 자료가 등록 실패되었습니다");
+			model.addAttribute("url", "/pds/pdsInput");
+		}
 
 		
 		return "include/message";
