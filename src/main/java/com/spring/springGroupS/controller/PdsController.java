@@ -2,7 +2,6 @@ package com.spring.springGroupS.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -21,10 +20,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.spring.springGroupS.common.Pagenation;
-import com.spring.springGroupS.common.ProjectProvide;
 import com.spring.springGroupS.service.PdsService;
 import com.spring.springGroupS.vo.PageVO;
 import com.spring.springGroupS.vo.PdsVO;
+import com.spring.springGroupS.vo.ReviewVO;
 
 @Controller
 @RequestMapping("/pds")
@@ -71,6 +70,20 @@ public class PdsController {
 		
 		model.addAttribute("pageVO", pageVO);
 		model.addAttribute("vo", vo);
+		
+		// 등록된 리뷰도 불러와서 함께 content로 보내기
+		List<ReviewVO> reviewVos = pdsService.getReviewList(idx, "pds");
+		model.addAttribute("reviewVos", reviewVos);
+		
+		// 리뷰 별점 평균 구하기
+		int reviewTot = 0;
+		for(ReviewVO r : reviewVos) {
+			reviewTot += r.getStar();
+		}
+		double reviewAvg = 0.0;
+		if(reviewVos.size() != 0) reviewAvg = (double) reviewTot / reviewVos.size();
+		model.addAttribute("reviewAvg", reviewAvg);
+	
 		
 		return "pds/pdsContent";
 	}
