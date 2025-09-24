@@ -4,34 +4,35 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.spring.springGroupS.dao.Study2DAO;
-import com.spring.springGroupS.vo.TransactionVO;
+import com.spring.springGroupS.dao.ScheduleDAO;
+import com.spring.springGroupS.vo.ScheduleVO;
 
 @Service
-public class Study2ServiceImpl implements Study2Service {
+public class ScheduleServiceImpl implements ScheduleService {
 
 	@Autowired
-	Study2DAO study2DAO;
+	ScheduleDAO scheduleDAO;
 
 	@Override
-	public void getCalendar() {
+	public void getScheduleList() {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		
 		// 오늘날짜 저장변수설정
 		Calendar calToday = Calendar.getInstance();
 		int toYear = calToday.get(Calendar.YEAR);
-		int toMonty = calToday.get(Calendar.MONTH);
+		int toMonth = calToday.get(Calendar.MONTH);
 		int toDay = calToday.get(Calendar.DATE);
 		
 		Calendar calView = Calendar.getInstance();
 		int yy = request.getParameter("yy")==null ? calView.get(Calendar.YEAR) : Integer.parseInt(request.getParameter("yy"));
-		int mm = request.getParameter("mm")==null ? calView.get(Calendar.MONDAY) : Integer.parseInt(request.getParameter("mm"));
+		int mm = request.getParameter("mm")==null ? calView.get(Calendar.MONTH) : Integer.parseInt(request.getParameter("mm"));
 		
 		if(mm < 0) {
 			mm = 11;
@@ -70,10 +71,20 @@ public class Study2ServiceImpl implements Study2Service {
 		calNext.set(nextYear, nextMonth, 1);
 		int nextStartWeek = calNext.get(Calendar.DAY_OF_WEEK);
 		
-		// ================================
+		// ===================================================
 		
+		// 개별 일정을 DB에서 가져와 담아주기
+		HttpSession session = request.getSession();
+		String mid = (String) session.getAttribute("sMid");
+		String ym = "";
+		int intMM = mm + 1;
+		if(intMM >=1 && intMM <= 9) ym = yy+"-0"+(intMM);
+		else ym = yy+"-"+(intMM);
+		List<ScheduleVO> vos = scheduleDAO.getScheduleList(mid, ym);
+		System.out.println("vos : " + vos);
+		request.setAttribute("vos", vos);
 		request.setAttribute("toYear", toYear);
-		request.setAttribute("toMonty", toMonty);
+		request.setAttribute("toMonth", toMonth);
 		request.setAttribute("toDay", toDay);
 		
 		request.setAttribute("yy", yy);
@@ -89,40 +100,15 @@ public class Study2ServiceImpl implements Study2Service {
 		request.setAttribute("preLastDay", preLastDay);
 		request.setAttribute("nextStartWeek", nextStartWeek);
 	}
+	
+	
 	@Override
-	public List<TransactionVO> getUserList() {
-		return study2DAO.getUserList();
-	}
-	@Override
-	public int setValidatorFormOk(TransactionVO vo) {
-		return study2DAO.setValidatorFormOk(vo);
-	}
-	@Override
-	public int setvalidatorDeleteOk(int idx) {
-		return study2DAO.setvalidatorDeleteOk(idx);
+	public List<ScheduleVO> getScheduleMenu(String mid, String ymd) {
+		return scheduleDAO.getScheduleMenu(mid, ymd);
 	}
 	
 	@Override
-	public List<TransactionVO> getTransactionList() {
-		// TODO Auto-generated method stub
-		return study2DAO.getTransactionList();
-	}
-	@Override
-	public List<TransactionVO> getTransactionList2() {
-		return study2DAO.getTransactionList2();
-	}
-	
-	@Override
-	public void setTransactionUser1Input(TransactionVO vo) {
-		study2DAO.setTransactionUser1Input(vo);
-		
-	}
-	@Override
-	public void setTransactionUser2Input(TransactionVO vo) {
-		study2DAO.setTransactionUser2Input(vo);
-	}
-@Override
-	public void setTransactionUserTotalInput(TransactionVO vo) {
-	study2DAO.setTransactionUserTotalInput(vo);
+	public int setScheduleInputOk(ScheduleVO vo) {
+		return scheduleDAO.setScheduleInputOk(vo);
 	}
 }

@@ -1,6 +1,8 @@
 package com.spring.springGroupS.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +27,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.spring.springGroupS.common.ProjectProvide;
 import com.spring.springGroupS.service.GuestService;
 import com.spring.springGroupS.service.MemberService;
+import com.spring.springGroupS.service.ScheduleService;
 import com.spring.springGroupS.vo.MemberVO;
+import com.spring.springGroupS.vo.ScheduleVO;
 
 @Controller
 @RequestMapping("/member")
@@ -42,6 +46,9 @@ public class MemberController {
 	
 	@Autowired
 	GuestService guestService;
+	
+	@Autowired
+	ScheduleService scheduleService;
 	
 	// 로그인 폼
 	@GetMapping("/memberLogin")
@@ -238,19 +245,25 @@ public class MemberController {
 		
 		// 방명록에 올린 글의 수
 		int guestCnt = guestService.getMemberSearch(mid, mVo.getNickName(), mVo.getName());
+		
+		//오늘의 일정 보이게 하기
+		LocalDate today = LocalDate.now();
+    String ymd = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    
+		List<ScheduleVO> vos = scheduleService.getScheduleMenu(mid, ymd);
+		
 		model.addAttribute("guestCnt", guestCnt);
 		model.addAttribute("mVo", mVo);
+		model.addAttribute("vos", vos);
 		
 		return "member/memberMain";
 	}
-	
 	// 회원 비밀번호 변경폼 보기
 	@GetMapping("/memberPwdCheck/{flag}")
 	public String memberPwdCheckGet(Model model, @PathVariable String flag) {
 		model.addAttribute("flag", flag);
 		return "member/memberPwdCheck";
 	}
-	
 	// 회원 비밀번호 검색
 	@ResponseBody
 	@PostMapping("/memberPwdCheck")
@@ -259,7 +272,6 @@ public class MemberController {
 		if(passwordEncoder.matches(pwd, vo.getPwd())) return "1";
 		return "0";
 	}
-	
 	// 회원 비밀번호 변경처리
 	@PostMapping("/memberPwdChange")
 	public String memberPwdChangePost(String mid, String newPwd) {
@@ -267,20 +279,17 @@ public class MemberController {
 		if(res != 0) return "redirect:/message/passwordChangeOk";
 		else return "redirect:/message/passwordChangeNo";
 	}
-	
 	// 아이디 찾기 폼보기
 	@GetMapping("/memberIdSearch")
 	public String memberIdSearchGet() {
 		return "member/memberIdSearch";
 	}
-	
 	// 아이디 찾기
 	@ResponseBody
 	@PostMapping("/memberIdSearch")
 	public List<MemberVO> memberIdSearchPost(Model model, String email) {
 		return memberService.getmemberIdSearch(email);
 	}
-	
 	// 회원 정보 수정폼보기
 	@GetMapping("/memberUpdate")
 	public String memberUpdateGet(Model model, String mid) {
@@ -288,7 +297,6 @@ public class MemberController {
 		model.addAttribute("vo", vo);
 		return "member/memberUpdate";
 	}
-	
 	// 회원 정보 수정처리하기
 	@PostMapping("/memberUpdate")
 	public String memberUpdatePost(MultipartFile fName, MemberVO vo, HttpSession session) {
@@ -296,13 +304,11 @@ public class MemberController {
 		if(memberService.getMemberNickCheck(vo.getNickName()) != null && !nickName.equals(vo.getNickName())) {
 			return "redirect:/message/nickCheckNo?mid="+vo.getMid();
 		}
-		
 		// 회원 사진처리
 		if(fName.getOriginalFilename() != null && !fName.getOriginalFilename().equals("")) {
 			if(!vo.getPhoto().equals("noimage.jpg")) projectProvide.fileDelete(vo.getPhoto(), "member");
 			vo.setPhoto(projectProvide.fileUpload(fName, vo.getMid(), "member"));
 		}
-		
 		int res = memberService.setMemberUpdateOk(vo);
 		if(res != 0) {
 			session.setAttribute("sNickName", vo.getNickName());
@@ -324,7 +330,6 @@ public class MemberController {
 		}
 		else return "0";
 	}
-
 	// 회원 리스트보기
 	@GetMapping("/memberList")
 	public String memberListGet(Model model,

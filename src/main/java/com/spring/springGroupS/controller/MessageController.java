@@ -200,6 +200,10 @@ public class MessageController {
 			model.addAttribute("message", "자료실에 자료가 등록 실패되었습니다");
 			model.addAttribute("url", "/pds/pdsInput");
 		}
+		else if(msgFlag.equals("transactionUserInputOk")) {
+			model.addAttribute("message", "회원가입이 완료되었습니다");
+			model.addAttribute("url", "/study2/transaction/transactionForm");
+		}
 
 		
 		return "include/message";

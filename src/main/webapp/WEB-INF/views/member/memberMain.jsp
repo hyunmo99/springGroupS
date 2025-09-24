@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<% pageContext.setAttribute("newLine", "\n"); %>
 <c:set var="ctp" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html>
@@ -27,7 +29,16 @@
     총 방문횟수 : ${mVo.visitCnt}<br/>
     오늘 방문횟수 : ${mVo.todayCnt}<br/>
     현재 가용 포인트 : ${mVo.point}<br/>
-    최종 방문일 : ${sLastDate}<br/>
+    최종 방문일 : ${sLastDate}<br/><br/>
+    
+    오늘 일정 <br/>
+    <c:forEach var="vo" items="${vos}" varStatus="st">
+    	${st.count} &nbsp;
+	     ${vo.part}&nbsp;
+    	<c:if test="${fn:indexOf(vo.content,newLine) != -1}">${fn:substring(vo.content,0,fn:indexOf(vo.content,newLine))}</c:if>
+      <c:if test="${fn:indexOf(vo.content,newLine) == -1}">${fn:substring(vo.content,0,20)}</c:if>
+	    <br/>       
+    </c:forEach> 
   </div>
   <div class="col">
     <img src="${ctp}/member/${mVo.photo}" width="200px"/>
