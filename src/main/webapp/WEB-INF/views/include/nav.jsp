@@ -56,7 +56,9 @@
 		        <a href="${ctp}/study2/calendar/calendar" class="w3-bar-item w3-button">인터넷 달력</a>
 		        <a href="${ctp}/study2/validator/validatorForm" class="w3-bar-item w3-button">validator(유효성검사)</a>
 		        <a href="${ctp}/study2/transaction/transactionForm" class="w3-bar-item w3-button">트렌섹션</a>
-		        <a href="${ctp}/study1/xml/xmlMenu" class="w3-bar-item w3-button">공공데이터(RestAPI)</a>
+		        <a href="${ctp}/study2/dataApi/dataApiForm1" class="w3-bar-item w3-button">공공데이터(RestAPI)</a>
+		        <a href="${ctp}/study2/chart/chartForm" class="w3-bar-item w3-button">차트연습</a>
+		        <a href="${ctp}/study2/chart2/chart2Form" class="w3-bar-item w3-button">차트연습2</a>
 		      </div>
 		    </div>
 	    </c:if>

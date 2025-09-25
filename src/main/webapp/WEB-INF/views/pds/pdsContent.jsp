@@ -179,7 +179,18 @@
     		error : () => alert("전송 오류!")
     	});
     }    
-    
+    $(window).scroll(function(){
+    	if($(this).scrollTop() > 100) {
+    		$("#topBtn").addClass("on");
+    	}
+    	else {
+    		$("#topBtn").removeClass("on");
+    	}
+    	
+    	$("#topBtn").click(function(){
+    		window.scrollTo({top:0, behavior: "smooth"});
+    	});
+    });
   </script>
   <style>
     th {
@@ -217,6 +228,19 @@
     #starForm input[type=radio]:checked ~ label {
       text-shadow: 0 0 0 rgba(250, 200, 0, 0.98);
     }
+    
+    /*  화살표 부드럽게 위로 이동하는 CSS(2개) */
+    h6 {
+    position: fixed;
+    right: 1rem;
+    bottom: -50px;
+    transition: 0.7s ease;
+  }
+  .on {
+    opacity: 0.8;
+    cursor: pointer;
+    bottom: 0;
+  }
   </style>
 </head>
 <body>
@@ -224,6 +248,7 @@
 <jsp:include page="/WEB-INF/views/include/slide2.jsp" />
 <p><br/></p>
 <div class="container">
+	<h6 id="topBtn" class="text-end me-3"><img src="${ctp}/images/arrowTop.gif" title="위로이동"/></h6>
   <h2 class="text-center mb-3">자료실 내용 상세보기</h2>
   <table class="table table-bordered text-center">
     <tr>

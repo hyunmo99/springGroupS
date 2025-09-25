@@ -11,6 +11,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.spring.springGroupS.dao.Study2DAO;
+import com.spring.springGroupS.vo.CrimeVO;
 import com.spring.springGroupS.vo.TransactionVO;
 
 @Service
@@ -124,5 +125,29 @@ public class Study2ServiceImpl implements Study2Service {
 @Override
 	public void setTransactionUserTotalInput(TransactionVO vo) {
 	study2DAO.setTransactionUserTotalInput(vo);
+	}
+
+	@Override
+	public void setSaveCrimeCheck(CrimeVO vo) {
+		study2DAO.setSaveCrimeCheck(vo);
+	}
+	@Override
+	public int setDeleteCrimeCheck(int year) {
+		return study2DAO.setDeleteCrimeCheck(year);
+	}
+	
+	@Override
+	public List<CrimeVO> getDbListCrimeCheck(int year) {
+		return study2DAO.getDbListCrimeCheck(year);
+	}
+	
+	@Override
+	public List<CrimeVO> getDataApiForm1(int year, String policeZone) {
+		return study2DAO.getDataApiForm1(year, policeZone);
+	}
+	
+	@Override
+	public CrimeVO getCrimeAnalyze(int year, String policeZone) {
+		return study2DAO.getCrimeAnalyze(year, policeZone);
 	}
 }
