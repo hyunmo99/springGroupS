@@ -59,6 +59,7 @@
 		        <a href="${ctp}/study2/dataApi/dataApiForm1" class="w3-bar-item w3-button">공공데이터(RestAPI)</a>
 		        <a href="${ctp}/study2/chart/chartForm" class="w3-bar-item w3-button">차트연습</a>
 		        <a href="${ctp}/study2/chart2/chart2Form" class="w3-bar-item w3-button">차트연습2</a>
+		        <a href="${ctp}/study2/kakao/kakaomap" class="w3-bar-item w3-button">카카오 맵</a>
 		      </div>
 		    </div>
 	    </c:if>

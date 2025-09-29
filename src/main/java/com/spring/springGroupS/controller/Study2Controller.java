@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.spring.springGroupS.service.Study2Service;
 import com.spring.springGroupS.vo.ChartVO;
 import com.spring.springGroupS.vo.CrimeVO;
+import com.spring.springGroupS.vo.KakaoAddressVO;
 import com.spring.springGroupS.vo.TransactionVO;
 
 @Controller
@@ -202,4 +203,55 @@ public class Study2Controller {
 		model.addAttribute("vo", vo);
 		return "study2/chart2/chart2Form";
 	}
+	// 카카오 맵 보기
+	@GetMapping("/kakao/kakaomap")
+	public String kakaomapGet() {
+		return "study2/kakao/kakaomap";
+	}
+	// kakaomap(클릭한 위치에 마커표시)
+	@GetMapping("/kakao/kakaoEx2")
+	public String kakaoEx2Get() {
+		return "study2/kakao/kakaoEx2";
+	}
+	//kakaomap(클릭한 위치에 마커표시 DB저장)
+	@ResponseBody
+	@PostMapping("/kakao/kakaoEx2")
+	public int kakaoEx2Post(KakaoAddressVO vo) {
+		int res = 0;
+		System.out.println("오류");
+		KakaoAddressVO searchVO = study2Service.getKakaoAddressSearch(vo.getAddress());
+		if(searchVO==null) res = study2Service.setKakaoAddressInput(vo);
+		return res;
+	}
+	// kakaomap(MyDB에 저장된 장소 표시/이동하기)
+	@GetMapping("/kakao/kakaoEx3")
+	public String kakaoEx3Get(Model model, KakaoAddressVO vo,
+			@RequestParam(name="address", defaultValue = "", required = false) String address) {
+		
+		if(address.equals("")) {
+			vo.setAddress("그린아트");
+			vo.setLatitude(36.6350116442859);
+			vo.setLongitude(127.45952622309285);
+		}
+		else vo = study2Service.getKakaoAddressSearch(address);
+		List<KakaoAddressVO> addressVos = study2Service.getKakaoAddressList();
+		model.addAttribute("addressVos", addressVos);
+		model.addAttribute("vo", vo);
+		
+		return "study2/kakao/kakaoEx3";
+	}
+	//kakaomap(검색한 장소를 DB에서 삭제하기)
+	@ResponseBody
+	@PostMapping("/kakao/kakaoAddressDelete")
+	public int kakaoAddressDeletePost(String address) {
+		return study2Service.setKakaoAddressDelete(address);
+	}
+//kakaomap(검색한 장소를 KakaoDB에서 검색하기)
+	@GetMapping("/kakao/kakaoEx4")
+	public String kakaoEx4Get(Model model, 
+			@RequestParam(name="address", defaultValue = "", required = false) String address) {
+		model.addAttribute("address", address);
+		return "study2/kakao/kakaoEx4";
+	}
+
 }
