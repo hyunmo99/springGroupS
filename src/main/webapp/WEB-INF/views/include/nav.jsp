@@ -86,7 +86,13 @@
 	    <a href="${ctp}/member/memberJoin" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Join</a>
     </c:if>
     <c:if test="${!empty sLevel}">
-    	<a href="${ctp}/member/memberLogout" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Logout</a>
+   		<div class="w3-dropdown-hover w3-hide-small">
+	      <button onclick="location.href='${ctp}/member/memberLogout'" class="w3-padding-large w3-button" title="More">Logout <i class="fa fa-caret-down"></i></button>     
+	      <div class="w3-dropdown-content w3-bar-block w3-card-4">
+		    	<a href="${ctp}/member/memberLogout" class="w3-bar-item w3-button w3-padding-large w3-hide-small">일반Logout</a>
+		    	<a href="${ctp}/member/kakaoLogout" class="w3-bar-item w3-button w3-padding-large w3-hide-small">KakaoLogout</a>
+	      </div>
+	    </div>
     </c:if>
   </div>
 </div>
