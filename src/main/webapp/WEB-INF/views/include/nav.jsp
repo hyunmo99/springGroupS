@@ -60,6 +60,9 @@
 		        <a href="${ctp}/study2/chart/chartForm" class="w3-bar-item w3-button">차트연습</a>
 		        <a href="${ctp}/study2/chart2/chart2Form" class="w3-bar-item w3-button">차트연습2</a>
 		        <a href="${ctp}/study2/kakao/kakaomap" class="w3-bar-item w3-button">카카오 맵</a>
+ 		        <a href="${ctp}/study2/weather/weatherForm" class="w3-bar-item w3-button">날씨정보</a>
+		        <a href="${ctp}/study2/qrCode/qrCodeForm" class="w3-bar-item w3-button">QR코드</a>
+		        <a href="${ctp}/study2/thumbnail/thumbnailForm" class="w3-bar-item w3-button">썸네일연습</a>
 		      </div>
 		    </div>
 	    </c:if>
