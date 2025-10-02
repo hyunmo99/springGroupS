@@ -101,10 +101,10 @@
   <div>
     <div class="main"><b>상품관리</b></div>
     <div class="sub">
-      <p><a href="${ctp}/admin/guest/adminGuestList">상품분류등록</a></p>
-      <p><a href="">상품등록관리</a></p>
-      <p><a href="">상품등록조회</a></p>
-      <p><a href="">옵션등록관리</a></p>
+      <p><a href="${ctp}/dbShop/dbCategory" target="adminContent">상품분류등록</a></p>
+      <p><a href="${ctp}/dbShop/dbProduct" target="adminContent">상품등록관리</a></p>
+      <p><a href="${ctp}/dbShop/dbShopList" target="adminContent">상품등록조회</a></p>
+      <p><a href="${ctp}/dbShop/dbOption" target="adminContent">옵션등록관리</a></p>
       <p><a href="">주문관리</a></p>
       <p><a href="">반품관리</a></p>
       <p><a href="">1:1문의</a></p>

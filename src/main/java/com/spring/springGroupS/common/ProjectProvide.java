@@ -1,6 +1,8 @@
 package com.spring.springGroupS.common;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -101,6 +103,29 @@ public class ProjectProvide {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmm");
 		return sdf.format(date)+ "_"+oFileName;
+	}
+
+	public void fileCopyCheck(String oriFilePath, String copyFilePath) {
+		File oriFile = new File(oriFilePath);
+    File copyFile = new File(copyFilePath);
+
+    try {
+      FileInputStream  fis = new FileInputStream(oriFile);
+      FileOutputStream fos = new FileOutputStream(copyFile);
+
+      byte[] buffer = new byte[2048];
+      int count = 0;
+      while((count = fis.read(buffer)) != -1) {
+        fos.write(buffer, 0, count);
+      }
+      fos.flush();
+      fos.close();
+      fis.close();
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 	}
 	
 	

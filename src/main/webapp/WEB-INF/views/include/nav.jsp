@@ -47,6 +47,7 @@
 		        <a href="${ctp}/study1/mail/mailForm" class="w3-bar-item w3-button">메일 연습</a>
 		        <a href="${ctp}/study1/fileUpload/fileUploadForm" class="w3-bar-item w3-button">파일업로드연습</a>
 		        <a href="${ctp}/study1/sweetAlert/sweetAlertForm" class="w3-bar-item w3-button">SweetAlert연습</a>
+		        <a href="${ctp}/study1/rangeSlider/rangeSlider" class="w3-bar-item w3-button">RangeSlider</a>
 		      </div>
 		    </div>
 		    <div class="w3-dropdown-hover w3-hide-small">

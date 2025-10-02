@@ -18,7 +18,7 @@
 	<resources mapping="/resources/**" location="/resources/" />
 	<resources mapping="/member/**" location="/resources/data/member/" />
 	<resources mapping="/js/**" location="/resources/js/" />
-	<resources mapping="/ckeditor/**" location="/resources/data/ckeditor/" />
+	<resources mapping="/ckeditor/**" location="/resources/ckeditor/" />
 	<!-- <resources mapping="/ckeditor/**" location="/resources/ckeditor/" /> -->
 	<resources mapping="/data/**" location="/resources/data/" />
 	<resources mapping="/css/**" location="/resources/css/" />
@@ -27,6 +27,8 @@
 	<resources mapping="/images/**" location="/resources/images/" />
 	<resources mapping="/qrCode/**" location="/resources/data/qrCode/" />
 	<resources mapping="/thumbnail/**" location="/resources/data/thumbnail/" />
+	<resources mapping="/product/**" location="/resources/data/dbShop/product/" />
+	<resources mapping="/dbShop/**" location="/resources/data/dbShop/" />
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
